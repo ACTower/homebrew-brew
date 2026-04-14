@@ -20,7 +20,7 @@ class Actower < Formula
   homepage "https://actower.io"
 
   url "https://#{S3_BUCKET}.s3.#{S3_REGION}.amazonaws.com/#{STAGE}/v#{VERSION}/actower-#{VERSION}.tar.gz"
-  sha256 "814e5ab9d571dc190333313e734a070cd0ae2673639eb5432259fd363a127c40"
+  sha256 "33b249cd0db5394d8d49fa49b7afe9eb4473ed801e1d6555b9241cc21b3c36c7"
   version VERSION
 
   # ACTower is commercial software; the source is not open.
