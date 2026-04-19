@@ -12,7 +12,7 @@ class Actower < Formula
   #   4. Update sha256 below
   S3_BUCKET = "actower-releases"
   S3_REGION = "us-west-2"
-  STAGE     = "qa" for production releases
+  STAGE     = "qa"    # Switch to "prod" for production releases
   VERSION   = "0.3.11"
   # ─────────────────────────────────────────────────────────────────────────
 
