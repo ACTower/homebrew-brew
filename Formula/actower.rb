@@ -12,7 +12,7 @@ class Actower < Formula
   #   4. Update sha256 below
   S3_BUCKET = "actower-releases"
   S3_REGION = "us-west-2"
-  STAGE     = "qa"    # Switch to "prod" for production releases
+  STAGE     = "prod"    # Switch to "prod" for production releases
   VERSION   = "1.0.0"
   # ─────────────────────────────────────────────────────────────────────────
 
@@ -20,7 +20,7 @@ class Actower < Formula
   homepage "https://actower.io"
 
   url "https://#{S3_BUCKET}.s3.#{S3_REGION}.amazonaws.com/#{STAGE}/v#{VERSION}/actower-#{VERSION}.tar.gz"
-  sha256 "8a0a03786bc52fe506fb479f64d0f6ce73b397978eb9d29aefaf16e793f37e5c"
+  sha256 "689a0dcdac6fd9c61a1201aafe2c00cac54a476efaa188bdfb3992f30276f01b"
   version VERSION
 
   # ACTower is commercial software; the source is not open.
