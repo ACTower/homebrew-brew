@@ -13,14 +13,14 @@ class Actower < Formula
   S3_BUCKET = "actower-releases"
   S3_REGION = "us-west-2"
   STAGE     = "prod"    # Switch to "prod" for production releases
-  VERSION   = "1.0.4"
+  VERSION   = "1.0.5"
   # ─────────────────────────────────────────────────────────────────────────
 
   desc "Control tower for AI coding agents — monitor, approve, and audit"
   homepage "https://actower.io"
 
   url "https://#{S3_BUCKET}.s3.#{S3_REGION}.amazonaws.com/#{STAGE}/v#{VERSION}/actower-#{VERSION}.tar.gz"
-  sha256 "773405f1c8b2207b41d8260e95175c3109ec9763d8ee2b932b0ba051781596ed"
+  sha256 "d1d36b67dea455107cad97fae6ffa4e85904f46f60e7a223e994c361ee008a1b"
   version VERSION
 
   # ACTower is commercial software; the source is not open.
