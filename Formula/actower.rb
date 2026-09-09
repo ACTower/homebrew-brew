@@ -51,6 +51,42 @@ class Actower < Formula
     bin.install_symlink libexec/"bin/actower"
   end
 
+  def post_install
+    # Kickstart the io.actower.web LaunchAgent when it's already loaded, so
+    # `brew upgrade actower` immediately picks up the new binary/assets instead
+    # of the running backend continuing to serve pre-upgrade code in memory.
+    # Mirrors the same kickstart install.sh runs on curl upgrades (Item 19).
+    #
+    # Silent no-op on:
+    #   - non-macOS (Linuxbrew) — launchctl is macOS-only
+    #   - fresh installs where the LaunchAgent isn't set up yet
+    #   - users running `actower web`/`actower desktop` in a foreground terminal
+    #     (that process is theirs to restart)
+    return unless OS.mac?
+
+    uid = Process.uid
+    launchctl = "/bin/launchctl"
+
+    # `launchctl print` returns 0 when the service is loaded, non-zero when
+    # defined-but-unloaded or absent. Preferred over `launchctl list | grep`
+    # because print cleanly distinguishes loaded from defined-but-unloaded.
+    # Use quiet_system (not system) — Homebrew's Formula#system raises
+    # ErrorDuringExecution on non-zero exit, which would fail the whole
+    # post_install step on the common fresh-install case. quiet_system
+    # returns true/false and suppresses stdout/stderr.
+    return unless quiet_system launchctl, "print", "gui/#{uid}/io.actower.web"
+
+    # -k forces the restart even if the service is currently running. Silent
+    # no-fail: a kickstart failure must never break `brew upgrade actower`.
+    ohai "Restarting Web UI service to load new code..."
+    if quiet_system launchctl, "kickstart", "-k", "gui/#{uid}/io.actower.web"
+      ohai "Web UI service restarted"
+    else
+      opoo "Web UI restart failed — run manually if you use the desktop app: " \
+           "launchctl kickstart -k gui/#{uid}/io.actower.web"
+    end
+  end
+
   def caveats
     <<~EOS
       Run first-time setup to create config and verify dependencies:
