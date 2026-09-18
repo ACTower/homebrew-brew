@@ -52,6 +52,39 @@ class Actower < Formula
   end
 
   def post_install
+    # ── Install marker (Phase B of install-method-awareness, v1.2.14+) ──
+    # Mirrors install.sh's marker write on curl installs. Records that this
+    # install was performed via brew so `actower`'s shadow-active-install
+    # helper can route bare invocations transparently into the marker's
+    # binary (fixes the curl-vs-brew PATH shadowing surprise Item 4b flagged).
+    #
+    # ~/.actower/install-marker.json is the SAME path install.sh writes to
+    # on curl installs — last-write-wins semantics, whichever install
+    # happened most recently owns the marker.
+    #
+    # Fail-soft by design: a marker that can't be written costs diagnostic
+    # quality, never a working install. quiet_system returns true/false and
+    # suppresses stdout/stderr — non-zero exit is a silent no-op.
+    #
+    # No-op before v1.2.14: install_marker.py first shipped in libexec/lib
+    # in the v1.2.14 tarball, so an older tarball's post_install falls
+    # through as a silent ImportError with no marker written.
+    if OS.mac? && (libexec/"lib/install_marker.py").exist?
+      marker_home = "#{ENV["HOME"]}/.actower"
+      FileUtils.mkdir_p(marker_home, mode: 0o700)
+
+      python = Formula["python@3.11"].opt_bin/"python3.11"
+      quiet_system python, "-c",
+        "import sys; sys.path.insert(0, sys.argv[1]); " \
+        "from install_marker import write_marker; " \
+        "write_marker(path=sys.argv[2], method='brew', " \
+        "version=sys.argv[3], cli_path=sys.argv[4])",
+        "#{libexec}/lib",
+        "#{marker_home}/install-marker.json",
+        VERSION,
+        "#{bin}/actower"
+    end
+
     # Kickstart the io.actower.web LaunchAgent when it's already loaded, so
     # `brew upgrade actower` immediately picks up the new binary/assets instead
     # of the running backend continuing to serve pre-upgrade code in memory.
