@@ -6,8 +6,14 @@ Official Homebrew tap for [ACTower](https://actower.io) — a control tower for 
 
 ```sh
 brew tap actower/brew
+brew trust actower/brew
 brew install actower
 ```
+
+> `brew trust` is required from Homebrew 6.0 on: it **ignores** formulae from
+> untrusted third-party taps, so tapping and installing without it fails with
+> "No available formula". See [Tap Trust](https://docs.brew.sh/Tap-Trust).
+> Safe to re-run if the tap is already trusted.
 
 Then run first-time setup:
 
