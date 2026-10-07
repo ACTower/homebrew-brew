@@ -87,7 +87,7 @@ class Actower < Formula
 
   def caveats
     <<~EOS
-      Launch ACTower:
+      Installed or upgraded? Launch (or relaunch) the app so it matches this version:
         actower desktop      # desktop app (macOS)
         actower web          # browser-based UI, any platform
 
